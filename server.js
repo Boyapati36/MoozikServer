@@ -35,11 +35,53 @@ app.get('/search', async (req, res) => {
     }
 });
 
+app.get('/getSongDetails', async (req, res) => {
+    const query = req.query.q;
+    try {
+        await ytMusicApi.initialize().then(() => {
+            ytMusicApi.getSong(query).then((results) => {
+                res.json(results);
+            })
+        }
+        );
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 app.get('/searchSong', async (req, res) => {
     const query = req.query.q;
     try {
         await ytMusicApi.initialize().then(() => {
             ytMusicApi.searchSongs(query).then((results) => {
+                res.json(results);
+            })
+        }
+        );
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/getAlbum', async (req, res) => {
+    const albumId = req.query.albumId;
+    try {
+        await ytMusicApi.initialize().then(() => {
+            ytMusicApi.getAlbum(albumId).then((results) => {
+                res.json(results);
+            })
+        }
+        );
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/getLyrics', async (req, res) => {
+    const videoId = req.query.videoId;
+    try {
+        await ytMusicApi.initialize().then(() => {
+            ytMusicApi.getLyrics(videoId).then((results) => {
                 res.json(results);
             })
         }
@@ -62,10 +104,24 @@ app.get('/discover', async (req, res) => {
     }
 });
 
+app.get('/getArtistSongs', async (req, res) => {
+    const artistId = req.query.q;
+    try {
+        await ytMusicApi.initialize().then(() => {
+            ytMusicApi.getArtistSongs(artistId).then((results) => {
+                res.json(results);
+            })
+        }
+        );
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 app.get('/getStreamingUrl', async (req, res) => {
     const id = req.query.id;
     try {
-        const response = await fetch(`http://localhost:8080/v1/video?url=https://www.youtube.com/watch?v=${id}&schema=url&schema=title`)
+        const response = await fetch(`http://localhost:8082/v1/video?url=https://www.youtube.com/watch?v=${id}&schema=url&schema=title`)
         const data = await response.json();
         res.json(data);
     } catch (error) {
